@@ -21,8 +21,8 @@ public class PrototypeTester
 		   {
 			   System.out.println("\t\tPatient Menu");
 			   System.out.println("\t1. Add patient");
+			   /*System.out.println("\t2. search patient");*/
 			   System.out.println("\t2. View Patient");
-			   System.out.println("\t3. Delete patient");
 			   menu_option = keyIn.nextInt();
 			   switch(menu_option)
 			   {
@@ -35,34 +35,14 @@ public class PrototypeTester
 				    String patientLastName = keyIn.nextLine();
 				    System.out.println("enter date of birth");
 				    String DOB = keyIn.nextLine();
-				    while(!DOB.matches("^((19|20)\\d\\d)-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])$"))
-				    {
-				    	System.out.println("The date of birth entered does not match the requirements\n Enter new date of birth");
-				    	DOB = keyIn.nextLine();
-				    }
 				    System.out.println("enter address");
 				    String address = keyIn.nextLine();
 				    System.out.println("enter email");
 				    String email = keyIn.nextLine();
 				    System.out.println("enter phone number");
 				    String phoneNB = keyIn.nextLine();
-				    while(!phoneNB.matches("^\\d{10}$"))
-				    {
-				    	System.out.println("The phone number entered does not match the requirements\n Enter new phone number");
-				    	phoneNB = keyIn.nextLine();
-				    }
-			        System.out.println("Enter PPS Number:");
+			        System.out.println("Enter PPSN Number:");
 			        String patientPPS = keyIn.nextLine();
-			        while(!patientPPS.matches("^\\d{7}[A-Z]{2}$")&&!patientPPS.matches("^\\d{7}[A-Z]{1}\\s{1}$"))
-				    {
-			        	if(patientPPS.matches("^\\d{7}[A-Z]{1}$"))
-			        		patientPPS=patientPPS+" ";
-			        	else
-			        	{
-					    	System.out.println("The PPS number entered does not match the requirements\n Enter new PPS number");
-					    	patientPPS = keyIn.nextLine();	
-			        	}
-				    }
 			        System.out.println("Enter next of kin");
 			        String patientnok=keyIn.nextLine();
 			        System.out.println("enter allergy");
@@ -74,7 +54,7 @@ public class PrototypeTester
 			        System.out.println("enter refferal class");
 			        String referance_class = keyIn.nextLine();
 			        Patient addpatient = new Patient(patientFirstName, patientLastName, DOB, address, email, phoneNB, patientPPS, patientnok, allergy, history, referance, referance_class );
-			        int addStatus = Patient.add(addpatient);
+			        int addStatus = patient.add(addpatient);
 			        if(addStatus==1)
 			        {
 			        	System.out.println("patient added to datbase");
@@ -99,20 +79,8 @@ public class PrototypeTester
 			    		Patient DisplayPatient = patientIterator.next();
 			    		System.out.println(DisplayPatient.toString());
 			    	}
-			    	break;
-			    case 3: //delete a patient
-			    	int idToDel=0;
-					System.out.println("\n\nList of patients:");
-					   
-					ArrayList arptoDel= new ArrayList();
-					arptoDel=Patient.viewAllPatients();
-					for(final Object p:arptoDel){
-						System.out.println(p.toString());
-					}
-					System.out.println("\n\nEnter the ID of the patient to delete:");
-					idToDel=keyIn.nextInt();
-			        int delStatus=Patient.deletePatient(idToDel);
-			        break;
+			        
+			       
 			   }
 		   }
 		   else if(menu_option == 2)
@@ -148,11 +116,19 @@ public class PrototypeTester
 				   }
 		           System.out.println("Enter ward number");
 		           int wardNum = keyIn.nextInt();
-		           int addStatus = Ward.assignWard(wardNum,searchHost);
-		           if(addStatus == 1)
-		           {
-		        	   System.out.println("record added to database");
+		           Ward selectedWard = Ward.getWardByID(wardNum);
+		           if (selectedWard.getbed_free()==0){
+		        	   System.out.println("The "+selectedWard.getward_name()+" ward has no bed available at the moment!");
 		           }
+		           else{
+		        	   int addStatus = Ward.assignWard(selectedWard,searchHost);
+		        	   
+			           if(addStatus == 1)
+			           {
+			        	   System.out.println("record added to database");
+			           }
+		           }
+		           
 				   break;
 			   case 2: //remove patient from ward
 				   int delfromWard=0;
@@ -169,7 +145,6 @@ public class PrototypeTester
 				   System.out.println(searchpatient.getID()+"\t"+
 			                          searchpatient.GetRefferalClass());*/
 				   int delStatus = Ward.removeFromWard(delfromWard);
-				   break;
 			   }
 		   }
 		   

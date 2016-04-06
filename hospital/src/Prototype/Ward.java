@@ -2,7 +2,7 @@ package Prototype;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Date;
-public class Ward extends Patient
+public class Ward
 {
 	//class attributes
   private int id;
@@ -48,19 +48,20 @@ public class Ward extends Patient
   }
   public int getbed_number()
   {
-	  return id;
+	  return bed_number;
   }
   public int getbed_free()
   {
-	  return id;
+	  return bed_free;
   }
+  
   public Ward search(int searchNum)
   {
 	  Ward ward = new Ward();
 	   try{
 		   Class.forName("com.mysql.jdbc.Driver");
 		   Connection conn = DriverManager.getConnection(url, userName, password);
-		   resultSet=statement.executeQuery("select * from hospital.Patient where hospital.Person.host_id=" + ward);
+		   resultSet=statement.executeQuery("select * from hospital.Ward where hospital.Ward.id=" + searchNum);
 		   while( resultSet.next());
 		   {
 			   ward = new Ward(resultSet.getInt("id"),
@@ -103,11 +104,34 @@ public class Ward extends Patient
 	  }
 	   return AllWards; 
 	}
-  public static int assignWard(int wardNum, int searchno)
+  
+  /*public Ward getWardByID(int wardID){
+	  Ward ward = new Ward();
+	  ArrayList<Ward> AllWards = new ArrayList<Ward>();
+	  for(Ward w : AllWards) { 
+		   if(w.id = wardID)
+			   
+		       //found it!
+		   }
+	  return ward;
+  }*/
+  
+  public static Ward getWardByID(int wardID)
+  {
+	  Ward ward = new Ward();
+	  ArrayList<Ward> AllWards = new ArrayList<Ward>();
+	  for(Ward w : AllWards) { 
+		  	if(w.id == wardID)
+		  		ward = w;
+		   }
+	  return ward;
+  }
+  public static int assignWard(Ward ward, int searchno)
   {
 	   int status = 0;
+	   ward.bed_free--;
 	   String sqlString= "update patient set ward_id= "
-	   		+wardNum+" where id="+searchno;
+	   		+ward.id+", bed_free="+ward.bed_free+" where id="+searchno;
 	   status = databaseUpdate(sqlString);
                          
 	   return status;  
@@ -148,6 +172,9 @@ public class Ward extends Patient
   }
   
   public String toString(){
-	   return this.id+" "+this.ward_name;
+	   return "ID: "+this.id+" ward name: "+this.ward_name+" Total beds: "+this.bed_number+" Free beds: "+this.getbed_free();
   }
+public void setbed_free(int bed_free) {
+	this.bed_free = bed_free;
+}
 }

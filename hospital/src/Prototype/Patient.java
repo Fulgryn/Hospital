@@ -130,7 +130,7 @@ public class Patient
    }
    //database access and update methods
    //ADD//
-   public static int add(Patient Pin)
+   public int add(Patient Pin)
    {
 	   int status = 0;
 	   String sqlString= "insert into hospital.Patient(first_name, last_name, DOB, address, email, phone_Nb, PPSN, next_of_kin, allergy, history, referral, referral_class) values(\'"+Pin.getfirst_name() + 
@@ -138,20 +138,10 @@ public class Patient
             "\', \'" + Pin.getemail() + "\', \'"+ Pin.getphone_nb() + "\', \'" +Pin.getPPS() + "\', \'"+Pin.getkin() + "\', \'"+ Pin.Getallergy()+ "\', \'" + Pin.GetHistory() + "\', \'" + Pin.GetRefferal()+ 
 	   		"\', \'" + Pin.GetRefferalClass()+ "\')";
 	   status = databaseUpdate(sqlString);
-           //System.out.print(sqlString);              
+           System.out.print(sqlString);              
 	   return status;
    }
-  
-   //delete the selected patient from the database
-   public static int deletePatient(int pID)
-   {
-	   int status = 0;
-	   String sqlString= "delete from hospital.Patient where id="+pID;
-	   status = databaseUpdate(sqlString);
-	   return status;
-   }
-   
-   //View all patients 
+   //Veiw all patients 
    public static ArrayList<Patient> viewAllPatients()
    {
 	  ArrayList<Patient> AllPatients = new ArrayList<Patient>();
@@ -218,7 +208,7 @@ public class Patient
 	   }
 	   return foundp;
    }
-   private static int databaseUpdate(String sqlUpdate)
+   private int databaseUpdate(String sqlUpdate)
    {
 	   int status = 0;
 	   
